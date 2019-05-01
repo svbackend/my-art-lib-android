@@ -1,4 +1,4 @@
-package top.mykino.mykinotop
+package com.svbackend.mykinotop
 
 import org.junit.Test
 

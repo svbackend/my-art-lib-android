@@ -1,4 +1,4 @@
-package top.mykino.mykinotop
+package com.svbackend.mykinotop
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("top.mykino.mykinotop", appContext.packageName)
+        assertEquals("com.svbackend.mykinotop", appContext.packageName)
     }
 }
