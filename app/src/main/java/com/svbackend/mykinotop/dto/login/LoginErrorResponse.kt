@@ -1,4 +1,4 @@
-package com.svbackend.mykinotop.dto
+package com.svbackend.mykinotop.dto.login
 
 
 import com.google.gson.annotations.SerializedName
