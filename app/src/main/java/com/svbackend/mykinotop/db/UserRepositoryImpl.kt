@@ -10,20 +10,5 @@ class UserRepositoryImpl(
     private val userDao: UserDao,
     private val userDataSource: UserDataSource
 ) : UserRepository {
-
-    init {
-        userDataSource.currentUser.observeForever {newUser ->
-            persistFetchedUser(newUser)
-        }
-    }
-
-    override suspend fun getCurrentUser(id: Int): LiveData<User> {
-        TODO()
-    }
-
-    private fun persistFetchedUser(user: User) {
-        GlobalScope.launch(Dispatchers.IO) {
-            userDao.insert(user)
-        }
-    }
+    // todo persist user?
 }
