@@ -15,8 +15,15 @@ import kotlinx.android.synthetic.main.login_fragment.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.closestKodein
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(), KodeinAware {
+
+    override val kodein by closestKodein()
+
+    // todo create ViewModelFactory
 
     companion object {
         fun newInstance() = LoginFragment()
@@ -34,20 +41,11 @@ class LoginFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
-        // TODO: Use the ViewModel
-        val apiService = ApiService()
-        val loginRequest = LoginRequest(
-            credentials = Credentials(
-                username = "svbackend",
-                password = ""
-            )
-        )
 
-        GlobalScope.launch(Dispatchers.Main) {
-            val loginSuccessResponse = apiService.login(loginRequest).await()
-            example.text = loginSuccessResponse.apiToken
-        }
 
     }
 
+    private fun bindUI() {
+        
+    }
 }
