@@ -24,6 +24,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -76,6 +79,9 @@ dependencies {
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     kapt 'com.github.bumptech.glide:compiler:4.8.0'
+
+    // Databinding
+    kapt "com.android.databinding:compiler:$android_plugin_version"
 
     // Groupie RecyclerView
     implementation 'com.xwray:groupie:2.1.0'

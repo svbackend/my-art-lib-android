@@ -42,8 +42,4 @@ class LoginFragment : ScopedFragment(), KodeinAware {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
     }
-
-    public fun loginBtnOnClick(view: View) {
-        Log.e("test", "clicked")
-    }
 }
