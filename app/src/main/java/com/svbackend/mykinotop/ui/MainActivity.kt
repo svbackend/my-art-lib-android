@@ -1,30 +1,49 @@
 package com.svbackend.mykinotop.ui
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
+import android.view.View
 import com.svbackend.mykinotop.R
+import com.svbackend.mykinotop.db.UserRepository
 import kotlinx.android.synthetic.main.activity_main.*
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.closestKodein
+import org.kodein.di.generic.instance
+import kotlinx.coroutines.launch
 
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var navController : NavController
+class MainActivity : ScopedActivity(), KodeinAware {
+    override val kodein by closestKodein()
+    private val userRepository: UserRepository by instance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
 
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-
-        bottom_nav.setupWithNavController(navController)
-        NavigationUI.setupActionBarWithNavController(this, navController)
+        checkIsLoggedIn()
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController, null)
+    private fun checkIsLoggedIn() = launch {
+        val user = userRepository.getLoggedInUser()
+
+        if (user.value == null) {
+            setContentView(R.layout.activity_main)
+            setSupportActionBar(toolbar)
+            return@launch
+        }
+
+        val moviesSearchIntent = Intent(this@MainActivity, MoviesSearchActivity::class.java)
+
+        startActivity(moviesSearchIntent)
+        finish()
+    }
+
+    fun goToLogin(v: View) {
+        val loginIntent = Intent(this, LoginActivity::class.java)
+        startActivity(loginIntent)
+    }
+
+    fun goToRegistration(v: View) {
+        val registrationIntent = Intent(this, RegistrationActivity::class.java)
+        startActivity(registrationIntent)
     }
 }
