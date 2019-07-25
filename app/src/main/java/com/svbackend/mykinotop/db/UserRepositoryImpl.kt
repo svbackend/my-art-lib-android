@@ -5,10 +5,14 @@ import com.svbackend.mykinotop.api.UserDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UserRepositoryImpl(
-    private val userDao: UserDao,
-    private val userDataSource: UserDataSource
+    private val userDao: UserDao
 ) : UserRepository {
-    // todo persist user?
+    override suspend fun getLoggedInUser(): LiveData<out User?> {
+        return withContext(Dispatchers.IO) {
+            userDao.getLoggedInUser()
+        }
+    }
 }
