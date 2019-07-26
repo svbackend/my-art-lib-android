@@ -3,7 +3,6 @@ package com.svbackend.mykinotop.ui.login
 import android.content.Intent
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,15 +10,13 @@ import android.widget.Toast
 import com.svbackend.mykinotop.R
 import com.svbackend.mykinotop.api.ApiService
 import com.svbackend.mykinotop.db.User
-import com.svbackend.mykinotop.db.UserDao
+import com.svbackend.mykinotop.db.UserRepository
 import com.svbackend.mykinotop.dto.login.Credentials
 import com.svbackend.mykinotop.dto.login.LoginRequest
-import com.svbackend.mykinotop.dto.login.LoginSuccessResponse
+import com.svbackend.mykinotop.dto.login.LoginResponse
 import com.svbackend.mykinotop.ui.MoviesSearchActivity
 import com.svbackend.mykinotop.ui.ScopedFragment
 import kotlinx.android.synthetic.main.login_fragment.*
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
@@ -31,7 +28,7 @@ class LoginFragment : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
 
     private val apiService: ApiService by instance()
-    private val userDao: UserDao by instance()
+    private val userRepository: UserRepository by instance()
 
     companion object {
         fun newInstance() = LoginFragment()
@@ -66,18 +63,17 @@ class LoginFragment : ScopedFragment(), KodeinAware {
                 Credentials(username, password)
             )
         )
-        val response: LoginSuccessResponse
+        val response: LoginResponse
 
         try {
             response = request.await()
         } catch (e: HttpException) {
             hideLoading()
             Toast.makeText(context, "Incorrect login or password! Try again", Toast.LENGTH_SHORT).show()
-            Log.e("LOGIN", "$e: ${e.message()}")
             return@launch
         }
 
-        userDao.insert(
+        userRepository.save(
             User(response.userId, username, response.apiToken)
         )
 

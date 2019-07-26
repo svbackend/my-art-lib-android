@@ -2,7 +2,7 @@ package com.svbackend.mykinotop.api
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.svbackend.mykinotop.dto.login.LoginRequest
-import com.svbackend.mykinotop.dto.login.LoginSuccessResponse
+import com.svbackend.mykinotop.dto.login.LoginResponse
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -21,7 +21,7 @@ interface ApiService {
     @POST("/api/auth/login")
     fun login(
         @Body loginRequest: LoginRequest
-    ): Deferred<LoginSuccessResponse>
+    ): Deferred<LoginResponse>
 
     companion object {
         operator fun invoke(): ApiService {

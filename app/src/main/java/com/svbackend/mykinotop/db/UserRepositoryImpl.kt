@@ -15,4 +15,10 @@ class UserRepositoryImpl(
             userDao.getLoggedInUser()
         }
     }
+
+    override suspend fun save(user: User) {
+        return withContext(Dispatchers.IO) {
+            userDao.insert(user)
+        }
+    }
 }
