@@ -20,7 +20,7 @@ class App : Application(), KodeinAware {
 
         bind() from singleton { Db(instance()) }
         bind() from singleton { instance<Db>().userDao() }
-        bind() from singleton { ApiService }
+        bind() from singleton { ApiService() }
         bind<UserDataSource>() with singleton { UserDataSourceImpl(instance()) }
         bind<UserRepository>() with singleton { UserRepositoryImpl(instance()) }
         // todo bind Repositories with dependencies
