@@ -1,12 +1,11 @@
 package com.svbackend.mykinotop.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.svbackend.mykinotop.R
 import com.svbackend.mykinotop.ui.login.LoginFragment
 
 class LoginActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
@@ -16,5 +15,4 @@ class LoginActivity : AppCompatActivity() {
                 .commitNow()
         }
     }
-
 }
