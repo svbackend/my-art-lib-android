@@ -12,5 +12,5 @@ interface UserDao {
     fun insert(user: User)
 
     @Query("SELECT * FROM user ORDER BY user.id ASC LIMIT 1")
-    fun getLoggedInUser(): LiveData<User?>
+    fun getLoggedInUser(): User?
 }

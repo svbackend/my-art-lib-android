@@ -10,7 +10,7 @@ import kotlinx.coroutines.withContext
 class UserRepositoryImpl(
     private val userDao: UserDao
 ) : UserRepository {
-    override suspend fun getLoggedInUser(): LiveData<out User?> {
+    override suspend fun getLoggedInUser(): User? {
         return withContext(Dispatchers.IO) {
             userDao.getLoggedInUser()
         }

@@ -25,7 +25,7 @@ class MainActivity : ScopedActivity(), KodeinAware {
     private fun checkIsLoggedIn() = launch {
         val user = userRepository.getLoggedInUser()
 
-        if (user.value == null) {
+        if (user == null) {
             setContentView(R.layout.activity_main)
             setSupportActionBar(toolbar)
             return@launch
