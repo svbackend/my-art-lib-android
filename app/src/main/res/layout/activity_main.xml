@@ -29,6 +29,7 @@
             <Button
                     android:onClick="goToLogin"
                     android:text="Login"
+                    android:backgroundTint="@color/colorPrimary" android:textColor="@color/colorAccent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/button" android:layout_marginTop="32dp"
@@ -37,6 +38,7 @@
             <Button
                     android:onClick="goToRegistration"
                     android:text="Registration"
+                    android:backgroundTint="@color/colorPrimaryDark" android:textColor="@color/colorAccent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/button2" android:layout_marginTop="32dp"

@@ -32,9 +32,10 @@ class MainActivity : ScopedActivity(), KodeinAware {
         }
 
         val moviesSearchIntent = Intent(this@MainActivity, MoviesSearchActivity::class.java)
+        moviesSearchIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         startActivity(moviesSearchIntent)
-        finish()
+        // finish()
     }
 
     fun goToLogin(v: View) {
