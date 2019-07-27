@@ -8,37 +8,7 @@
             android:layout_height="match_parent"
             tools:context=".ui.login.LoginFragment">
 
-        <ProgressBar
-                android:visibility="invisible"
-                android:id="@+id/progressBar_loading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:indeterminate="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-                android:visibility="invisible"
-                android:id="@+id/textView_loading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="Loading"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/progressBar_loading"
-                app:layout_constraintVertical_bias="0.0"/>
+        <include layout="@layout/progress_overlay"/>
 
         <TextView
                 android:id="@+id/textView_registration"

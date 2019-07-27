@@ -14,10 +14,13 @@ import com.svbackend.mykinotop.db.UserRepository
 import com.svbackend.mykinotop.dto.login.Credentials
 import com.svbackend.mykinotop.dto.login.LoginRequest
 import com.svbackend.mykinotop.dto.login.LoginResponse
+import com.svbackend.mykinotop.internal.hideLoading
+import com.svbackend.mykinotop.internal.showLoading
 import com.svbackend.mykinotop.ui.MoviesSearchActivity
 import com.svbackend.mykinotop.ui.RegistrationActivity
 import com.svbackend.mykinotop.ui.ScopedFragment
 import kotlinx.android.synthetic.main.login_fragment.*
+import kotlinx.android.synthetic.main.progress_overlay.*
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
@@ -58,7 +61,7 @@ class LoginFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun login() = launch {
-        showLoading()
+        showLoading(progress_overlay)
 
         val username = fieldUsername.text.toString()
         val password = fieldPassword.text.toString()
@@ -73,7 +76,7 @@ class LoginFragment : ScopedFragment(), KodeinAware {
         try {
             response = request.await()
         } catch (e: HttpException) {
-            hideLoading()
+            hideLoading(progress_overlay)
             Toast.makeText(context, "Incorrect login or password! Try again", Toast.LENGTH_SHORT).show()
             return@launch
         }
@@ -82,7 +85,7 @@ class LoginFragment : ScopedFragment(), KodeinAware {
             User(response.userId, username, response.apiToken)
         )
 
-        hideLoading()
+        hideLoading(progress_overlay)
         goToMoviesSearchActivity()
     }
 
@@ -97,15 +100,5 @@ class LoginFragment : ScopedFragment(), KodeinAware {
         startActivity(
             Intent(this.context, RegistrationActivity::class.java)
         )
-    }
-
-    private fun showLoading() {
-        progressBar_loading.visibility = View.VISIBLE
-        textView_loading.visibility = View.VISIBLE
-    }
-
-    private fun hideLoading() {
-        progressBar_loading.visibility = View.INVISIBLE
-        textView_loading.visibility = View.INVISIBLE
     }
 }
