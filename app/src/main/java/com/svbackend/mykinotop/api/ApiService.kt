@@ -6,12 +6,16 @@ import com.svbackend.mykinotop.dto.login.LoginResponse
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 
+const val WEB_HOST = "https://mykino.top"
 const val API_HOST = "https://api.mykino.top"
 
 // https://api.mykino.top
@@ -22,6 +26,9 @@ interface ApiService {
     fun login(
         @Body loginRequest: LoginRequest
     ): Deferred<LoginResponse>
+
+    @GET("/api/users/username/{username}")
+    fun isUsernameAvailable(@Path("username") username: String): Deferred<EmptyResponse>
 
     companion object {
         operator fun invoke(): ApiService {

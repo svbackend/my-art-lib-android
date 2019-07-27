@@ -3,18 +3,23 @@ package com.svbackend.mykinotop.ui.registration
 import android.content.Intent
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.svbackend.mykinotop.R
 import com.svbackend.mykinotop.api.ApiService
+import com.svbackend.mykinotop.api.WEB_HOST
 import com.svbackend.mykinotop.db.UserRepository
 import com.svbackend.mykinotop.ui.LoginActivity
 import com.svbackend.mykinotop.ui.ScopedFragment
 import kotlinx.android.synthetic.main.registration_fragment.*
+import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
+import retrofit2.HttpException
 
 class RegistrationFragment : ScopedFragment(), KodeinAware {
 
@@ -46,6 +51,43 @@ class RegistrationFragment : ScopedFragment(), KodeinAware {
 
         registration_TextView_linkToLogin.setOnClickListener {
             goToLoginActivity()
+        }
+
+        registration_EditText_email.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                return@OnFocusChangeListener
+            }
+
+            val recommendedUsername =  registration_EditText_email.text.toString().split("@".toRegex()).first()
+            val currentUsername = registration_EditText_username.text.toString()
+
+            if (currentUsername.isNotEmpty()) {
+                return@OnFocusChangeListener
+            }
+
+            registration_EditText_username.setText(recommendedUsername)
+        }
+
+        registration_EditText_username.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+
+            override fun afterTextChanged(editable: Editable) {
+                val username = registration_EditText_username.text.toString()
+                registration_TextInputLayout_username.isHelperTextEnabled = true
+                registration_TextInputLayout_username.helperText = "$WEB_HOST/u/$username"
+                checkIsUsernameAvailable()
+            }
+        })
+    }
+
+    private fun checkIsUsernameAvailable() = launch {
+        try {
+            apiService.isUsernameAvailable(registration_EditText_username.text.toString()).await()
+            registration_TextInputLayout_username.isErrorEnabled = true
+            registration_TextInputLayout_username.error = "This username has been already taken"
+        } catch (e: HttpException) {
+            // It means that we catched 404 error => user with this username not exist
         }
     }
 
