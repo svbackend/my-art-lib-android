@@ -40,11 +40,11 @@ class RegistrationFragment : ScopedFragment(), KodeinAware {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(RegistrationViewModel::class.java)
 
-        btn_signUp.setOnClickListener {
+        registration_Button_signup.setOnClickListener {
             signUp()
         }
 
-        login_link.setOnClickListener {
+        registration_TextView_linkToLogin.setOnClickListener {
             goToLoginActivity()
         }
     }
@@ -61,13 +61,12 @@ class RegistrationFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun showLoading() {
-        progressBar_loading.visibility = View.VISIBLE
-        textView_loading.visibility = View.VISIBLE
+        registration_FrameLayout_loading.visibility = View.VISIBLE
+        registration_Button_signup.isEnabled = false
     }
 
     private fun hideLoading() {
-        progressBar_loading.visibility = View.INVISIBLE
-        textView_loading.visibility = View.INVISIBLE
+        registration_FrameLayout_loading.visibility = View.GONE
+        registration_Button_signup.isEnabled = true
     }
-
 }
