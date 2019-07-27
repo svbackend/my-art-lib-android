@@ -56,16 +56,7 @@ class RegistrationFragment : ScopedFragment(), KodeinAware {
         registration_EditText_email.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 return@OnFocusChangeListener
-            }
-
-            val recommendedUsername =  registration_EditText_email.text.toString().split("@".toRegex()).first()
-            val currentUsername = registration_EditText_username.text.toString()
-
-            if (currentUsername.isNotEmpty()) {
-                return@OnFocusChangeListener
-            }
-
-            registration_EditText_username.setText(recommendedUsername)
+            } else updateRecommendedUsername()
         }
 
         registration_EditText_username.addTextChangedListener(object : TextWatcher {
@@ -73,12 +64,27 @@ class RegistrationFragment : ScopedFragment(), KodeinAware {
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
 
             override fun afterTextChanged(editable: Editable) {
-                val username = registration_EditText_username.text.toString()
-                registration_TextInputLayout_username.isHelperTextEnabled = true
-                registration_TextInputLayout_username.helperText = "$WEB_HOST/u/$username"
+                displayUserProfileUrl()
                 checkIsUsernameAvailable()
             }
         })
+    }
+
+    private fun updateRecommendedUsername() {
+        val recommendedUsername =  registration_EditText_email.text.toString().split("@".toRegex()).first()
+        val currentUsername = registration_EditText_username.text.toString()
+
+        if (currentUsername.isNotEmpty()) {
+            return
+        }
+
+        registration_EditText_username.setText(recommendedUsername)
+    }
+
+    private fun displayUserProfileUrl() {
+        val username = registration_EditText_username.text.toString()
+        registration_TextInputLayout_username.isHelperTextEnabled = true
+        registration_TextInputLayout_username.helperText = "$WEB_HOST/u/$username"
     }
 
     private fun checkIsUsernameAvailable() = launch {
@@ -86,8 +92,10 @@ class RegistrationFragment : ScopedFragment(), KodeinAware {
             apiService.isUsernameAvailable(registration_EditText_username.text.toString()).await()
             registration_TextInputLayout_username.isErrorEnabled = true
             registration_TextInputLayout_username.error = "This username has been already taken"
+            registration_Button_signup.isEnabled = false
         } catch (e: HttpException) {
             // It means that we catched 404 error => user with this username not exist
+            registration_Button_signup.isEnabled = true
         }
     }
 

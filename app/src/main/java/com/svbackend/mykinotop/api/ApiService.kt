@@ -30,6 +30,9 @@ interface ApiService {
     @GET("/api/users/username/{username}")
     fun isUsernameAvailable(@Path("username") username: String): Deferred<EmptyResponse>
 
+    @GET("/api/users/email/{email}")
+    fun isEmailAvailable(@Path("email") email: String): Deferred<EmptyResponse>
+
     companion object {
         operator fun invoke(): ApiService {
             val requestInterceptor = Interceptor { chain ->
