@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- TODO remove usesCleartextTraffic="true" its needed to connect to 127.0.0.1 for testing but not needed in prod version -->
     <application
             android:name=".App"
             android:allowBackup="true"
@@ -11,7 +12,9 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
+            android:usesCleartextTraffic="true"
             android:theme="@style/AppTheme">
+
         <activity android:name=".ui.MoviesSearchActivity">
         </activity>
         <activity android:name=".ui.RegistrationActivity">

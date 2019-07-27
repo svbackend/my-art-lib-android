@@ -3,16 +3,24 @@ package com.svbackend.mykinotop.ui.registration
 import android.content.Intent
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.svbackend.mykinotop.R
 import com.svbackend.mykinotop.api.ApiService
 import com.svbackend.mykinotop.api.WEB_HOST
+import com.svbackend.mykinotop.db.User
 import com.svbackend.mykinotop.db.UserRepository
+import com.svbackend.mykinotop.dto.login.Credentials
+import com.svbackend.mykinotop.dto.login.LoginRequest
+import com.svbackend.mykinotop.dto.login.LoginResponse
+import com.svbackend.mykinotop.dto.registration.RegistrationData
+import com.svbackend.mykinotop.dto.registration.RegistrationRequest
+import com.svbackend.mykinotop.internal.TextChanged
 import com.svbackend.mykinotop.ui.LoginActivity
+import com.svbackend.mykinotop.ui.MainActivity
 import com.svbackend.mykinotop.ui.ScopedFragment
 import kotlinx.android.synthetic.main.registration_fragment.*
 import kotlinx.coroutines.launch
@@ -53,30 +61,120 @@ class RegistrationFragment : ScopedFragment(), KodeinAware {
             goToLoginActivity()
         }
 
-        registration_EditText_email.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                return@OnFocusChangeListener
-            } else updateRecommendedUsername()
-        }
+        registration_EditText_email.addTextChangedListener(TextChanged {
+            if (isEmailValid()) {
+                checkIsEmailAvailable()
+                updateRecommendedUsername()
+            }
+        })
 
-        registration_EditText_username.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-
-            override fun afterTextChanged(editable: Editable) {
+        registration_EditText_username.addTextChangedListener(TextChanged {
+            if (isUsernameValid()) {
                 displayUserProfileUrl()
                 checkIsUsernameAvailable()
             }
         })
     }
 
+    private fun signUp() = launch {
+        if (!isUsernameValid() || !isPasswordValid()) {
+            return@launch
+        }
+
+        showLoading()
+        val email = registration_EditText_email.text.toString()
+        val username = registration_EditText_username.text.toString()
+        val password = registration_EditText_password.text.toString()
+
+        val request = apiService.register(
+            RegistrationRequest(
+                RegistrationData(email, username, password)
+            )
+        )
+
+        try {
+            request.await()
+        } catch (e: HttpException) {
+            hideLoading()
+            Toast.makeText(context, "Something went wrong, try again", Toast.LENGTH_SHORT).show()
+            Log.e("REGISTRATION", e.message())
+            Log.e("REGISTRATION", e.response().toString())
+            return@launch
+        }
+
+        login()
+    }
+
+    private fun login() = launch {
+        val username = registration_EditText_username.text.toString()
+        val password = registration_EditText_password.text.toString()
+
+        val request = apiService.login(
+            LoginRequest(
+                Credentials(username, password)
+            )
+        )
+        val response: LoginResponse
+
+        try {
+            response = request.await()
+        } catch (e: HttpException) {
+            hideLoading()
+            Toast.makeText(context, "Incorrect login or password! Try again", Toast.LENGTH_SHORT).show()
+            return@launch
+        }
+
+        userRepository.save(
+            User(response.userId, username, response.apiToken)
+        )
+
+        goToMainActivity()
+    }
+
+    private fun goToMainActivity() {
+        val mainActivityIntent = Intent(this.context, MainActivity::class.java)
+        mainActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        startActivity(mainActivityIntent)
+    }
+
+    private fun isUsernameValid(): Boolean {
+        val username = registration_EditText_email.text.toString()
+
+        return username.length in 4..30
+    }
+
+    private fun isPasswordValid(): Boolean {
+        val password = registration_EditText_password.text.toString()
+
+        return password.length in 6..64
+    }
+
+    private fun isEmailValid(): Boolean {
+        val email = registration_EditText_email.text.toString()
+        val isValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+
+        if (isValid) {
+            registration_TextInputLayout_email.isErrorEnabled = false
+            registration_Button_signup.isEnabled = true
+        } else {
+            registration_TextInputLayout_email.isErrorEnabled = true
+            registration_TextInputLayout_email.error = "Email address seems not correct"
+            registration_Button_signup.isEnabled = false
+        }
+
+        return isValid
+    }
+
     private fun updateRecommendedUsername() {
-        val recommendedUsername =  registration_EditText_email.text.toString().split("@".toRegex()).first()
+        val email = registration_EditText_email.text.toString()
         val currentUsername = registration_EditText_username.text.toString()
 
-        if (currentUsername.isNotEmpty()) {
+        if (email.isEmpty() || currentUsername.isNotEmpty()) {
             return
         }
+
+        val recommendedUsername = email.split("@".toRegex()).first()
 
         registration_EditText_username.setText(recommendedUsername)
     }
@@ -99,9 +197,17 @@ class RegistrationFragment : ScopedFragment(), KodeinAware {
         }
     }
 
-    private fun signUp() {
-        showLoading()
-        // todo
+    private fun checkIsEmailAvailable() = launch {
+        try {
+            apiService.isEmailAvailable(registration_EditText_email.text.toString()).await()
+            registration_TextInputLayout_email.isErrorEnabled = true
+            registration_TextInputLayout_email.error = "User with this email already exists"
+            registration_Button_signup.isEnabled = false
+        } catch (e: HttpException) {
+            // It means that we catched 404 error => user with this username not exist
+            registration_TextInputLayout_email.isErrorEnabled = false
+            registration_Button_signup.isEnabled = true
+        }
     }
 
     private fun goToLoginActivity() {
