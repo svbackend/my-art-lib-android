@@ -2,10 +2,9 @@ package com.svbackend.mykinotop.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import com.svbackend.mykinotop.R
 import com.svbackend.mykinotop.db.UserRepository
-import kotlinx.android.synthetic.main.activity_main.*
+import com.svbackend.mykinotop.ui.moviessearch.MoviesSearchFragment
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
 import org.kodein.di.generic.instance
@@ -18,33 +17,25 @@ class MainActivity : ScopedActivity(), KodeinAware {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.movies_search_activity)
 
-        checkIsLoggedIn()
-    }
-
-    private fun checkIsLoggedIn() = launch {
-        val user = userRepository.getLoggedInUser()
-
-        if (user == null) {
-            setContentView(R.layout.activity_main)
-            setSupportActionBar(toolbar)
-            return@launch
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, MoviesSearchFragment.newInstance())
+                .commitNow()
         }
 
-        val moviesSearchIntent = Intent(this@MainActivity, MoviesSearchActivity::class.java)
-        moviesSearchIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-        startActivity(moviesSearchIntent)
-        // finish()
+        launch {
+            if (userRepository.getLoggedInUser() == null) {
+                switchToLoginActivity()
+            }
+        }
     }
 
-    fun goToLogin(v: View) {
-        val loginIntent = Intent(this, LoginActivity::class.java)
-        startActivity(loginIntent)
-    }
+    private fun switchToLoginActivity() {
+        val loginActivityIntent = Intent(this@MainActivity, LoginActivity::class.java)
+        loginActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-    fun goToRegistration(v: View) {
-        val registrationIntent = Intent(this, RegistrationActivity::class.java)
-        startActivity(registrationIntent)
+        startActivity(loginActivityIntent)
     }
 }

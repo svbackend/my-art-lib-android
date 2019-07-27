@@ -15,6 +15,7 @@ import com.svbackend.mykinotop.dto.login.Credentials
 import com.svbackend.mykinotop.dto.login.LoginRequest
 import com.svbackend.mykinotop.dto.login.LoginResponse
 import com.svbackend.mykinotop.ui.MoviesSearchActivity
+import com.svbackend.mykinotop.ui.RegistrationActivity
 import com.svbackend.mykinotop.ui.ScopedFragment
 import kotlinx.android.synthetic.main.login_fragment.*
 import kotlinx.coroutines.launch
@@ -49,6 +50,10 @@ class LoginFragment : ScopedFragment(), KodeinAware {
 
         btn_login.setOnClickListener {
             login()
+        }
+
+        registration_link.setOnClickListener {
+            goToRegistrationActivity()
         }
     }
 
@@ -86,6 +91,12 @@ class LoginFragment : ScopedFragment(), KodeinAware {
         moviesSearchIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         startActivity(moviesSearchIntent)
+    }
+
+    private fun goToRegistrationActivity() {
+        startActivity(
+            Intent(this.context, RegistrationActivity::class.java)
+        )
     }
 
     private fun showLoading() {
