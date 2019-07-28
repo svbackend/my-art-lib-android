@@ -3,6 +3,7 @@ package com.svbackend.mykinotop.ui.login
 import android.content.Intent
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,7 +53,10 @@ class LoginFragment : ScopedFragment(), KodeinAware {
             login()
         }
 
+        Log.d("LOGIN", "Listener attached")
+
         login_TextView_linkToRegistration.setOnClickListener {
+            Log.d("LOGIN", "CLICKED!!!")
             goToRegistrationActivity()
         }
     }

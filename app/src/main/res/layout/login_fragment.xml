@@ -55,7 +55,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/login_TextView_dontHaveAnAccount"
-                android:textSize="16sp" android:textStyle="bold"
+                android:textSize="18sp" android:textStyle="bold"
+                android:background="@android:drawable/editbox_background"
         />
 
         <EditText
