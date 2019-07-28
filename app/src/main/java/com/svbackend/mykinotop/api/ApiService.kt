@@ -3,6 +3,7 @@ package com.svbackend.mykinotop.api
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.svbackend.mykinotop.dto.login.LoginRequest
 import com.svbackend.mykinotop.dto.login.LoginResponse
+import com.svbackend.mykinotop.dto.movie.MoviesResponse
 import com.svbackend.mykinotop.dto.registration.RegistrationRequest
 import com.svbackend.mykinotop.dto.registration.RegistrationResponse
 import kotlinx.coroutines.Deferred
@@ -40,6 +41,9 @@ interface ApiService {
 
     @GET("/api/users/email/{email}")
     fun isEmailAvailable(@Path("email") email: String): Deferred<EmptyResponse>
+
+    @GET("/api/movies")
+    fun getMovies(): Deferred<MoviesResponse>
 
     companion object {
         operator fun invoke(): ApiService {
