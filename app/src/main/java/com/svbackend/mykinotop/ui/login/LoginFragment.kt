@@ -14,7 +14,7 @@ import com.svbackend.mykinotop.db.UserRepository
 import com.svbackend.mykinotop.dto.login.Credentials
 import com.svbackend.mykinotop.dto.login.LoginRequest
 import com.svbackend.mykinotop.dto.login.LoginResponse
-import com.svbackend.mykinotop.ui.MoviesSearchActivity
+import com.svbackend.mykinotop.ui.MainActivity
 import com.svbackend.mykinotop.ui.RegistrationActivity
 import com.svbackend.mykinotop.ui.ScopedFragment
 import kotlinx.android.synthetic.main.login_fragment.*
@@ -83,14 +83,14 @@ class LoginFragment : ScopedFragment(), KodeinAware {
         )
 
         hideLoading()
-        goToMoviesSearchActivity()
+        gotToMainActivity()
     }
 
-    private fun goToMoviesSearchActivity() {
-        val moviesSearchIntent = Intent(this.context, MoviesSearchActivity::class.java)
-        moviesSearchIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+    private fun gotToMainActivity() {
+        val mainActivityIntent = Intent(this.context, MainActivity::class.java)
+        mainActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        startActivity(moviesSearchIntent)
+        startActivity(mainActivityIntent)
     }
 
     private fun goToRegistrationActivity() {
