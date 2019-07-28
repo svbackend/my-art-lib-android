@@ -17,19 +17,18 @@ class MainActivity : ScopedActivity(), KodeinAware {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        launch {
-            if (userRepository.getLoggedInUser() == null) {
-                switchToLoginActivity()
-            }
-        }
-
         setContentView(R.layout.main_activity)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, MainFragment.newInstance())
                 .commitNow()
+        }
+
+        launch {
+            if (userRepository.getLoggedInUser() == null) {
+                switchToLoginActivity()
+            }
         }
     }
 
