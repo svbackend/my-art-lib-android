@@ -53,10 +53,7 @@ class LoginFragment : ScopedFragment(), KodeinAware {
             login()
         }
 
-        Log.d("LOGIN", "Listener attached")
-
         login_TextView_linkToRegistration.setOnClickListener {
-            Log.d("LOGIN", "CLICKED!!!")
             goToRegistrationActivity()
         }
     }

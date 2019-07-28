@@ -6,10 +6,10 @@ import com.svbackend.mykinotop.dto.login.LoginResponse
 import com.svbackend.mykinotop.dto.movie.MoviesResponse
 import com.svbackend.mykinotop.dto.registration.RegistrationRequest
 import com.svbackend.mykinotop.dto.registration.RegistrationResponse
+import com.svbackend.mykinotop.preferences.UserApiTokenProvider
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
@@ -46,20 +46,23 @@ interface ApiService {
     fun getMovies(): Deferred<MoviesResponse>
 
     companion object {
-        operator fun invoke(): ApiService {
+        operator fun invoke(apiTokenProvider: UserApiTokenProvider): ApiService {
             val requestInterceptor = Interceptor { chain ->
-
-                val url = chain.request()
+                val urlBuilder = chain.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("language", "en") // todo load lang from user's preferences
-                    .build()
 
-                // todo if authorized addQueryParameter("token", "USER's TOKEN")
+                val apiToken = apiTokenProvider.getApiToken()
+
+                if (apiToken != null) {
+                    urlBuilder.addQueryParameter("api_token", apiToken)
+                }
+
+                urlBuilder.addQueryParameter("language", "en") // todo load lang from user's preferences
 
                 val request = chain.request()
                     .newBuilder()
-                    .url(url)
+                    .url(urlBuilder.build())
                     .build()
 
                 return@Interceptor chain.proceed(request)

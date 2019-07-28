@@ -7,6 +7,8 @@ import com.svbackend.mykinotop.api.UserDataSourceImpl
 import com.svbackend.mykinotop.db.Db
 import com.svbackend.mykinotop.db.UserRepository
 import com.svbackend.mykinotop.db.UserRepositoryImpl
+import com.svbackend.mykinotop.preferences.UserApiTokenProvider
+import com.svbackend.mykinotop.preferences.UserApiTokenProviderImpl
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -20,9 +22,10 @@ class App : Application(), KodeinAware {
 
         bind() from singleton { Db(instance()) }
         bind() from singleton { instance<Db>().userDao() }
-        bind() from singleton { ApiService() }
+        bind() from singleton { ApiService(instance()) }
         bind<UserDataSource>() with singleton { UserDataSourceImpl(instance()) }
         bind<UserRepository>() with singleton { UserRepositoryImpl(instance()) }
-        // todo bind Repositories with dependencies
+        bind<UserApiTokenProvider>() with singleton { UserApiTokenProviderImpl(instance()) }
+
     }
 }

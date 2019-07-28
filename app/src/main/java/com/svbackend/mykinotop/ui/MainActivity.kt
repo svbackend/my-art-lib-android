@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.svbackend.mykinotop.R
 import com.svbackend.mykinotop.db.UserRepository
+import com.svbackend.mykinotop.preferences.UserApiTokenProvider
 import com.svbackend.mykinotop.ui.main.MainFragment
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ScopedActivity(), KodeinAware {
     override val kodein by closestKodein()
     private val userRepository: UserRepository by instance()
+    private val apiTokenProvider: UserApiTokenProvider by instance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +28,11 @@ class MainActivity : ScopedActivity(), KodeinAware {
         }
 
         launch {
-            if (userRepository.getLoggedInUser() == null) {
+            val loggedInUser = userRepository.getLoggedInUser()
+            if (loggedInUser == null) {
                 switchToLoginActivity()
+            } else {
+                apiTokenProvider.setApiToken(loggedInUser.apiToken)
             }
         }
     }
