@@ -17,6 +17,13 @@ class MainActivity : ScopedActivity(), KodeinAware {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        launch {
+            if (userRepository.getLoggedInUser() == null) {
+                switchToLoginActivity()
+            }
+        }
+
         setContentView(R.layout.main_activity)
 
         if (savedInstanceState == null) {
@@ -24,16 +31,10 @@ class MainActivity : ScopedActivity(), KodeinAware {
                 .replace(R.id.container, MainFragment.newInstance())
                 .commitNow()
         }
-
-        launch {
-            if (userRepository.getLoggedInUser() == null) {
-                switchToLoginActivity()
-            }
-        }
     }
 
     private fun switchToLoginActivity() {
-        val loginActivityIntent = Intent(this@MainActivity, LoginActivity::class.java)
+        val loginActivityIntent = Intent(this, LoginActivity::class.java)
         loginActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         startActivity(loginActivityIntent)
