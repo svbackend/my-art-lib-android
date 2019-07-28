@@ -18,8 +18,8 @@ import retrofit2.http.Path
 
 
 const val WEB_HOST = "https://mykino.top"
-// const val API_HOST = "https://api.mykino.top"
-const val API_HOST = "http://10.0.2.2:8080" // 10.0.2.2 bcz JVM map this ip to localhost on your host machine
+const val API_HOST = "https://api.mykino.top"
+// const val API_HOST = "http://10.0.2.2:8080" // 10.0.2.2 bcz JVM map this ip to localhost on your host machine
 
 // https://api.mykino.top
 
@@ -32,7 +32,7 @@ interface ApiService {
 
     @POST("/api/users")
     fun register(
-        @Body registrationRequext: RegistrationRequest
+        @Body registrationRequest: RegistrationRequest
     ): Deferred<RegistrationResponse>
 
     @GET("/api/users/username/{username}")
