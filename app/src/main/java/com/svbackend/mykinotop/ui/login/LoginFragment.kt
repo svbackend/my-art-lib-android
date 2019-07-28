@@ -15,6 +15,7 @@ import com.svbackend.mykinotop.db.UserRepository
 import com.svbackend.mykinotop.dto.login.Credentials
 import com.svbackend.mykinotop.dto.login.LoginRequest
 import com.svbackend.mykinotop.dto.login.LoginResponse
+import com.svbackend.mykinotop.preferences.UserApiTokenProvider
 import com.svbackend.mykinotop.ui.MainActivity
 import com.svbackend.mykinotop.ui.RegistrationActivity
 import com.svbackend.mykinotop.ui.ScopedFragment
@@ -31,6 +32,7 @@ class LoginFragment : ScopedFragment(), KodeinAware {
 
     private val apiService: ApiService by instance()
     private val userRepository: UserRepository by instance()
+    private val apiTokenProvider: UserApiTokenProvider by instance()
 
     companion object {
         fun newInstance() = LoginFragment()
@@ -82,6 +84,8 @@ class LoginFragment : ScopedFragment(), KodeinAware {
         userRepository.save(
             User(response.userId, username, response.apiToken)
         )
+
+        apiTokenProvider.setApiToken(response.apiToken)
 
         hideLoading()
         gotToMainActivity()

@@ -13,4 +13,7 @@ interface UserDao {
 
     @Query("SELECT * FROM user ORDER BY user.id ASC LIMIT 1")
     fun getLoggedInUser(): User?
+
+    @Query("SELECT * FROM movie WHERE movie.screen = :screen")
+    fun getMoviesForScreen(screen: String): Array<Movie>
 }

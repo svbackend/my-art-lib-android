@@ -1,10 +1,6 @@
 package com.svbackend.mykinotop.db
 
-import androidx.lifecycle.LiveData
-import com.svbackend.mykinotop.api.UserDataSource
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class UserRepositoryImpl(
@@ -19,6 +15,12 @@ class UserRepositoryImpl(
     override suspend fun save(user: User) {
         return withContext(Dispatchers.IO) {
             userDao.insert(user)
+        }
+    }
+
+    override suspend fun getMoviesForMainScreen(): Array<Movie> {
+        return withContext(Dispatchers.IO) {
+            userDao.getMoviesForScreen(SCREEN_MAIN)
         }
     }
 }

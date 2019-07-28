@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [User::class],
-    version = 1,
+    entities = [User::class, Movie::class],
+    version = 2,
     exportSchema = false
 )
 abstract class Db: RoomDatabase () {

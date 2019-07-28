@@ -19,6 +19,7 @@ import com.svbackend.mykinotop.dto.login.LoginResponse
 import com.svbackend.mykinotop.dto.registration.RegistrationData
 import com.svbackend.mykinotop.dto.registration.RegistrationRequest
 import com.svbackend.mykinotop.internal.TextChanged
+import com.svbackend.mykinotop.preferences.UserApiTokenProvider
 import com.svbackend.mykinotop.ui.LoginActivity
 import com.svbackend.mykinotop.ui.MainActivity
 import com.svbackend.mykinotop.ui.ScopedFragment
@@ -35,6 +36,7 @@ class RegistrationFragment : ScopedFragment(), KodeinAware {
 
     private val apiService: ApiService by instance()
     private val userRepository: UserRepository by instance()
+    private val apiTokenProvider: UserApiTokenProvider by instance()
 
     companion object {
         fun newInstance() = RegistrationFragment()
@@ -127,6 +129,8 @@ class RegistrationFragment : ScopedFragment(), KodeinAware {
         userRepository.save(
             User(response.userId, username, response.apiToken)
         )
+
+        apiTokenProvider.setApiToken(response.apiToken)
 
         goToMainActivity()
     }

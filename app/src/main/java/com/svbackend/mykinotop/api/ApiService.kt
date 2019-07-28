@@ -1,5 +1,6 @@
 package com.svbackend.mykinotop.api
 
+import android.util.Log
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.svbackend.mykinotop.dto.login.LoginRequest
 import com.svbackend.mykinotop.dto.login.LoginResponse
@@ -60,9 +61,13 @@ interface ApiService {
 
                 urlBuilder.addQueryParameter("language", "en") // todo load lang from user's preferences
 
+                val url = urlBuilder.build()
+
+                Log.d("API_SERVICE", url.toString())
+
                 val request = chain.request()
                     .newBuilder()
-                    .url(urlBuilder.build())
+                    .url(url)
                     .build()
 
                 return@Interceptor chain.proceed(request)

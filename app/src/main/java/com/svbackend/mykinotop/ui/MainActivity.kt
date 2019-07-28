@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 class MainActivity : ScopedActivity(), KodeinAware {
     override val kodein by closestKodein()
     private val userRepository: UserRepository by instance()
-    private val apiTokenProvider: UserApiTokenProvider by instance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,11 +27,8 @@ class MainActivity : ScopedActivity(), KodeinAware {
         }
 
         launch {
-            val loggedInUser = userRepository.getLoggedInUser()
-            if (loggedInUser == null) {
+            if (userRepository.getLoggedInUser() == null) {
                 switchToLoginActivity()
-            } else {
-                apiTokenProvider.setApiToken(loggedInUser.apiToken)
             }
         }
     }
