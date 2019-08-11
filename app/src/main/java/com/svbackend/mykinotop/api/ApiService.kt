@@ -11,12 +11,10 @@ import com.svbackend.mykinotop.preferences.UserApiTokenProvider
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 
 const val WEB_HOST = "https://mykino.top"
@@ -44,7 +42,7 @@ interface ApiService {
     fun isEmailAvailable(@Path("email") email: String): Deferred<EmptyResponse>
 
     @GET("/api/movies")
-    fun getMovies(): Deferred<MoviesResponse>
+    fun getMovies(@Query("offset") offset: Int = 0): Call<MoviesResponse>
 
     companion object {
         operator fun invoke(apiTokenProvider: UserApiTokenProvider): ApiService {

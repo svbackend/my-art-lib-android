@@ -1,9 +1,7 @@
 package com.svbackend.mykinotop
 
 import android.app.Application
-import com.svbackend.mykinotop.api.ApiService
-import com.svbackend.mykinotop.api.UserDataSource
-import com.svbackend.mykinotop.api.UserDataSourceImpl
+import com.svbackend.mykinotop.api.*
 import com.svbackend.mykinotop.db.Db
 import com.svbackend.mykinotop.db.UserRepository
 import com.svbackend.mykinotop.db.UserRepositoryImpl
@@ -24,6 +22,7 @@ class App : Application(), KodeinAware {
         bind() from singleton { instance<Db>().userDao() }
         bind() from singleton { ApiService(instance()) }
         bind<UserDataSource>() with singleton { UserDataSourceImpl(instance()) }
+        bind<MovieDataSource>() with singleton { MovieDataSourceImpl(instance()) }
         bind<UserRepository>() with singleton { UserRepositoryImpl(instance()) }
         bind<UserApiTokenProvider>() with singleton { UserApiTokenProviderImpl(instance()) }
 
